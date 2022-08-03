@@ -1,0 +1,91 @@
+.container{
+	position: absolute;
+	top:50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	box-shadow: 0px 0px 15px 8px #99bbff;
+	padding: 10px;
+    border-radius: 10px;
+}
+.cellTd {
+	margin:0px;
+	padding:0px;
+	border: 1px solid #ddd;
+}
+.sudoku-board{
+	margin: 0px;
+	font-weight: bold;
+	font-family: sans-serif;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+.row:nth-child(1)>.cellTd{
+	border-top: black solid 2px;
+}
+.row:nth-child(3)>.cellTd,
+.row:nth-child(6)>.cellTd,
+.row:nth-child(9)>.cellTd{
+	border-bottom: black solid 2px;	
+}
+.cellTd:nth-child(1){
+	border-left: black solid 2px;
+}
+.cellTd:nth-child(3),
+.cellTd:nth-child(6),
+.cellTd:nth-child(9){
+	border-right: black solid 2px;	
+}
+
+
+.cell {
+	border:none;
+	outline: none;
+	width:20px;
+	height:20px;
+	margin:10px;
+	padding:0px;
+	text-align: center;
+}
+
+@media (max-width: 420px) {
+	.cell {
+		margin: 5px;
+	}
+}
+
+@media (max-width: 330px) {
+	.cell {
+		margin: 1px;
+	}
+}
+
+.one {
+	color : red;
+}
+.two {
+	color: green;
+}
+.three{
+	color:chartreuse;
+}
+.four {
+	color :#ff8c00;
+}
+.five {
+	color :#0055ff;
+}
+.six {
+	color :#aa00aa;
+}
+.seven{
+	color: #00ffff;
+}
+.eight{
+	color: #800000;
+}
+.nine{
+	color: #aaaa00;
+}
+.error {
+	background-color: red;
+}

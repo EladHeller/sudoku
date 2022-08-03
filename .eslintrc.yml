@@ -1,0 +1,25 @@
+env:
+  browser: true
+  es2021: true
+globals:
+  RequestCredentials: readonly
+extends:
+  - airbnb-base
+  - plugin:import/typescript
+  - "plugin:@typescript-eslint/eslint-recommended"
+  - "plugin:@typescript-eslint/recommended"
+
+parser: '@typescript-eslint/parser'
+parserOptions:
+  ecmaVersion: 12
+  sourceType: module
+plugins:
+  - '@typescript-eslint'
+rules:
+  '@typescript-eslint/type-annotation-spacing': [error, {before: true, after: true, overrides: {colon: {before: false, after: true}}}]
+  '@typescript-eslint/member-delimiter-style': [error, {multiline: {delimiter: semi}}]
+  curly: [error, all]
+  no-restricted-syntax: off
+  no-plusplus: off
+  import/extensions:
+      ['error', 'ignorePackages', {'js': 'never', 'jsx': 'never', 'ts': 'never', 'tsx': 'never'}]
