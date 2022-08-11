@@ -38,6 +38,7 @@
 
 
 .cell {
+	font-weight: bold;
 	border:none;
 	outline: none;
 	width:20px;
@@ -88,4 +89,5 @@
 }
 .error {
 	background-color: red;
+	color: white;
 }

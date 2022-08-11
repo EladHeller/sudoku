@@ -24,6 +24,14 @@ function resetOptions(board: SudokuBoard): void {
   });
 }
 
+export function resetErrors(board: SudokuBoard): void {
+  board.forEach((row) => {
+    row.forEach((cell) => {
+      cell.error = false;
+    });
+  });
+}
+
 function removeOptions(
   area: SudokuCell[],
   notToRemoveCells: SudokuCell[],
@@ -100,9 +108,8 @@ function calcOptions(board: SudokuBoard): boolean {
   return isChanged;
 }
 
-export function solveSudoku(board: SudokuBoard): SudokuBoard {
+export function getAllAreas(board: SudokuBoard) {
   const rows: SudokuBoard = JSON.parse(JSON.stringify(board));
-  resetOptions(rows);
   const columns = rows.map((row, rIndex) => row.map((_, cIndex) => rows[cIndex][rIndex]));
   const squares = rows.map(
     (row, rIndex) => row.map(
@@ -113,6 +120,13 @@ export function solveSudoku(board: SudokuBoard): SudokuBoard {
       ],
     ),
   );
+
+  return { rows, columns, squares };
+}
+
+export function solveSudoku(board: SudokuBoard): SudokuBoard {
+  const { columns, squares, rows } = getAllAreas(board);
+  resetOptions(rows);
 
   let isError = false;
   let isChanged = false;

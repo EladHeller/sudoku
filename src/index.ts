@@ -5,11 +5,7 @@ import './sudoku.css';
 
 const root = document.querySelector('#root');
 const sudokuModel = SudokuModel();
-const rows: SudokuBoard = Array(AREAS_COUNT).fill(1)
-  .map(() => Array(AREAS_COUNT).fill(1).map(() => ({
-    options: [],
-  })));
-const allowedActions = ['Backspace', 'Tab'];
+let rows: SudokuBoard = [[]];
 
 const classes = {
   1: 'one',
@@ -23,38 +19,44 @@ const classes = {
   9: 'nine',
 };
 
+const viewBoard: HTMLInputElement[][] = [];
+
 function valueChanged(e: KeyboardEvent, y: number, x: number) {
-  if (!allowedActions.includes(e.key)) {
+  if (e.key !== 'Tab') {
     e.preventDefault();
-  }
-  if (!e.target || !(e.target instanceof HTMLInputElement)) {
-    return;
   }
   if (e.key.match(/^[1-9]$/)) {
     rows[y][x].value = Number(e.key) as SudokuValue;
-    e.target.value = e.key;
-    e.target.className = `cell ${classes[e.key]}`;
-    return;
   }
-  if (e.key === 'Backspace') {
-    e.target.value = '';
+  if (['Backspace', '0'].includes(e.key)) {
+    rows[y][x].value = undefined;
   }
-  if (e.target.value === '') {
-    e.target.className = 'cell';
+
+  sudokuModel.setBoard(rows);
+  let targetCell: HTMLElement | null = null;
+  if (e.key === 'ArrowDown') {
+    targetCell = viewBoard[y + 1]?.[x];
+  } else if (e.key === 'ArrowRight') {
+    targetCell = viewBoard[y]?.[x + 1];
+  } else if (e.key === 'ArrowUp') {
+    targetCell = viewBoard[y - 1]?.[x];
+  } else if (e.key === 'ArrowLeft') {
+    targetCell = viewBoard[y]?.[x - 1];
   }
+
+  targetCell?.focus();
 }
 
-const viewBoard: HTMLInputElement[][] = [];
-
 sudokuModel.board$.subscribe((board) => {
+  rows = board;
   board.forEach((row, rIndex) => {
     row.forEach((cell, cIndex) => {
-      rows[rIndex][cIndex].value = cell.value;
-      if (viewBoard[rIndex]?.[cIndex] != null) {
-        viewBoard[rIndex][cIndex].value = cell.value?.toString() ?? '';
-        if (cell.error) {
-          viewBoard[rIndex][cIndex].classList.add('error');
-        }
+      const cellElement = viewBoard[rIndex]?.[cIndex];
+      if (cellElement != null) {
+        cellElement.value = cell.value?.toString() ?? '';
+        cellElement.className = `cell ${cellElement.value ? classes[cellElement.value] : ''}`;
+        cellElement.parentElement?.classList.toggle('error', cell.error);
+        cellElement.classList.toggle('error', cell.error);
       }
     });
   });
