@@ -124,6 +124,22 @@ export function getAllAreas(board: SudokuBoard) {
   return { rows, columns, squares };
 }
 
+export function findSingleInArea(board: SudokuBoard) {
+  let isChanged = false;
+  for (const area of board) {
+    for (let number = 0; number < AREAS_COUNT; number++) {
+      const cellsWithNumber = area
+        .filter((cell) => cell.options.some((option) => option === number));
+      if ((cellsWithNumber.length === 1) && (cellsWithNumber[0].options.length > 1)) {
+        isChanged = true;
+        cellsWithNumber[0].options = cellsWithNumber[0].options.filter((x) => x === number);
+      }
+    }
+  }
+
+  return isChanged;
+}
+
 export function solveSudoku(board: SudokuBoard): SudokuBoard {
   const { columns, squares, rows } = getAllAreas(board);
   resetOptions(rows);
@@ -140,6 +156,9 @@ export function solveSudoku(board: SudokuBoard): SudokuBoard {
       isChanged ||= calcOptions(rows);
       isChanged ||= calcOptions(columns);
       isChanged ||= calcOptions(squares);
+      isChanged ||= findSingleInArea(rows);
+      isChanged ||= findSingleInArea(columns);
+      isChanged ||= findSingleInArea(squares);
     }
   } while (isChanged && !isError);
   setValues(rows);
