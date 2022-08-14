@@ -1,40 +1,22 @@
-import { BehaviorSubject, Observable } from 'rxjs';
-import { AREAS_COUNT } from './SudokuConfig';
-import {
-  getAllAreas, markErrors, resetErrors, solveSudoku,
-} from './SudokuLogic';
-import { SudokuBoard, SudokuValue } from './SudokuTypes';
+import { BehaviorSubject } from 'rxjs';
+import { ISudokuLogic, ISudokuModel, SudokuBoard } from './SudokuTypes';
 
-interface ISudokuModel {
-  board$: Observable<SudokuBoard>;
-  reset(): void;
-  calc(board: SudokuBoard): void;
-  setBoard(board: SudokuBoard): void;
-}
-
-function createDefaultBoard(): SudokuBoard {
-  return Array(AREAS_COUNT).fill(1).map(() => Array(AREAS_COUNT).fill(1).map(() => ({
-    options: Array(AREAS_COUNT).fill(1).map((_, index) => (index + 1) as SudokuValue),
-    error: false,
-  })));
-}
-
-export default function SudokuModel(): ISudokuModel {
-  const boardSubject = new BehaviorSubject<SudokuBoard>(createDefaultBoard());
+export default function SudokuModel(logic: ISudokuLogic): ISudokuModel {
+  const boardSubject = new BehaviorSubject<SudokuBoard>(logic.createDefaultBoard());
   function reset() {
-    boardSubject.next(createDefaultBoard());
+    boardSubject.next(logic.createDefaultBoard());
   }
 
   function calc(board: SudokuBoard) {
-    boardSubject.next(solveSudoku(board));
+    boardSubject.next(logic.solveSudoku(board));
   }
 
   function setBoard(board: SudokuBoard) {
-    const { columns, squares, rows } = getAllAreas(board);
-    resetErrors(columns);
-    markErrors(columns);
-    markErrors(squares);
-    markErrors(rows);
+    const { columns, squares, rows } = logic.getAllAreas(board);
+    logic.resetErrors(columns);
+    logic.markErrors(columns);
+    logic.markErrors(squares);
+    logic.markErrors(rows);
     boardSubject.next(rows);
   }
 

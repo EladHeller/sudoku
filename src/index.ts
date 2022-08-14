@@ -1,10 +1,15 @@
-import { AREAS_COUNT } from './SudokuConfig';
+import { AREAS_COUNT, SQUARE_COLUMNS, SQUARE_ROWS } from './SudokuConfig';
 import SudokuModel from './SudokuModel';
 import { SudokuBoard, SudokuValue } from './SudokuTypes';
 import './sudoku.css';
+import SudokuLogic from './SudokuLogic';
 
 const root = document.querySelector('#root');
-const sudokuModel = SudokuModel();
+const sudokuModel = SudokuModel(SudokuLogic({
+  areasCount: AREAS_COUNT,
+  squareColumns: SQUARE_COLUMNS,
+  squareRows: SQUARE_ROWS,
+}));
 let rows: SudokuBoard = [[]];
 
 const classes = {
