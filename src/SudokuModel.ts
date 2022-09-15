@@ -14,9 +14,7 @@ export default function SudokuModel(logic: ISudokuLogic): ISudokuModel {
   function setBoard(board: SudokuBoard) {
     const { columns, squares, rows } = logic.getAllAreas(board);
     logic.resetErrors(columns);
-    logic.markErrors(columns);
-    logic.markErrors(squares);
-    logic.markErrors(rows);
+    [columns, squares, rows].forEach(logic.markErrors);
     boardSubject.next(rows);
   }
 
