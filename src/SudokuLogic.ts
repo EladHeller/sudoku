@@ -39,7 +39,7 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
     notToRemoveCells: SudokuCell[],
     optionsToRemove: number[],
   ): boolean {
-    return area.some((cell) => {
+    const results = area.map((cell) => {
       if (notToRemoveCells.includes(cell)) {
         return false;
       }
@@ -47,6 +47,8 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
       cell.options = cell.options.filter((option) => !optionsToRemove.includes(option));
       return cell.options.length !== beforeLength;
     });
+
+    return results.some((r) => r);
   }
 
   function getSameCells(
@@ -95,7 +97,7 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
         requestedSameCount < config.areasCount;
         requestedSameCount++) {
         const relevantCells = area.filter((cell) => cell.options.length <= requestedSameCount);
-        isChanged ||= relevantCells.some((cell) => {
+        isChanged = relevantCells.some((cell) => {
           const matchCells = getSameCells(
             relevantCells.slice(relevantCells.indexOf(cell) + 1),
             requestedSameCount,
@@ -105,7 +107,7 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
             return removeOptions(area, matchCells, matchCells.flatMap((x) => x.options));
           }
           return false;
-        });
+        }) || isChanged;
       }
     });
     return isChanged;
@@ -137,13 +139,13 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
 
     do {
       isChanged = false;
-      isError ||= markErrors(rows);
-      isError ||= markErrors(columns);
-      isError ||= markErrors(squares);
+      isError = markErrors(rows) || isError;
+      isError = markErrors(columns) || isError;
+      isError = markErrors(squares) || isError;
       if (!isError) {
-        isChanged ||= calcOptions(rows);
-        isChanged ||= calcOptions(columns);
-        isChanged ||= calcOptions(squares);
+        isChanged = calcOptions(rows) || isChanged;
+        isChanged = calcOptions(columns) || isChanged;
+        isChanged = calcOptions(squares) || isChanged;
       }
     } while (isChanged && !isError);
     setValues(rows);
