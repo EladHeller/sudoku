@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import {
-  SudokuBoard, SudokuValue, SudokuCell, SudokuConfig, ISudokuLogic,
+  SudokuBoard, SudokuValue, SudokuCell, SudokuConfig, ISudokuLogic, AllAreas,
 } from './SudokuTypes';
 
 export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
@@ -113,7 +113,7 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
     return isChanged;
   }
 
-  function getAllAreas(board: SudokuBoard) {
+  function getAllAreas(board: SudokuBoard): AllAreas {
     const rows: SudokuBoard = JSON.parse(JSON.stringify(board));
     const columns = rows.map((row, rIndex) => row.map((_, cIndex) => rows[cIndex][rIndex]));
     const squares = rows.map(
@@ -122,12 +122,25 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
           Math.floor(rIndex / config.squareRows) * config.squareRows
            + Math.floor(cIndex / config.squareColumns)
         ][
-          (rIndex % config.squareRows) * config.squareRows + (cIndex % config.squareColumns)
+          (rIndex % config.squareRows) * config.squareColumns + (cIndex % config.squareColumns)
         ],
       ),
     );
 
-    return { rows, columns, squares };
+    const horizontalSquares = rows.map(
+      (row, rIndex) => row.map(
+        (_, cIndex) => rows[
+          (rIndex % config.squareRows) * config.squareColumns + (cIndex % config.squareColumns)
+        ][
+          Math.floor(rIndex / config.squareRows) * config.squareRows
+           + Math.floor(cIndex / config.squareColumns)
+        ],
+      ),
+    );
+
+    return {
+      rows, columns, squares, horizontalSquares,
+    };
   }
 
   function solveSudoku(board: SudokuBoard): SudokuBoard {

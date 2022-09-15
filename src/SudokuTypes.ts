@@ -10,6 +10,13 @@ export interface SudokuCell {
 
 export type SudokuBoard = SudokuCell[][];
 
+export interface AllAreas {
+  rows: SudokuBoard;
+  columns: SudokuBoard;
+  squares: SudokuBoard;
+  horizontalSquares: SudokuBoard;
+}
+
 export interface SudokuConfig {
   areasCount: number;
   squareRows: number;
@@ -26,7 +33,7 @@ export interface ISudokuLogic {
   ) => SudokuCell[] | undefined;
   getAllAreas: (
     board: SudokuBoard
-  ) => { rows: SudokuBoard; columns: SudokuBoard; squares: SudokuBoard };
+  ) => AllAreas;
   solveSudoku: (board: SudokuBoard) => SudokuBoard;
   createDefaultBoard(): SudokuBoard;
   calcOptions(board: SudokuBoard): boolean;
