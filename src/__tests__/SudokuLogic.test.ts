@@ -395,4 +395,55 @@ describe('SudokuLogic', () => {
       ]);
     });
   });
+
+  describe('solveSudoku', () => {
+    it('should solve sudoku', () => {
+      const board: SudokuBoard = [[
+        { error: false, options: [] },
+        { error: false, options: [] },
+        { error: false, options: [] },
+        { error: false, options: [] },
+      ], [
+        { error: false, options: [1], value: 1 },
+        { error: false, options: [] },
+        { error: false, options: [2], value: 2 },
+        { error: false, options: [] },
+      ], [
+        { error: false, options: [] },
+        { error: false, options: [4], value: 4 },
+        { error: false, options: [] },
+        { error: false, options: [3], value: 3 },
+      ], [
+        { error: false, options: [] },
+        { error: false, options: [] },
+        { error: false, options: [] },
+        { error: false, options: [] },
+      ]];
+
+      const result = sudokuLogic.solveSudoku(board);
+      expect(result[0][0]).not.toBe(board[0][0]);
+
+      expect(result).toEqual([[
+        { error: false, options: [4], value: 4 },
+        { error: false, options: [2], value: 2 },
+        { error: false, options: [3], value: 3 },
+        { error: false, options: [1], value: 1 },
+      ], [
+        { error: false, options: [1], value: 1 },
+        { error: false, options: [3], value: 3 },
+        { error: false, options: [2], value: 2 },
+        { error: false, options: [4], value: 4 },
+      ], [
+        { error: false, options: [2], value: 2 },
+        { error: false, options: [4], value: 4 },
+        { error: false, options: [1], value: 1 },
+        { error: false, options: [3], value: 3 },
+      ], [
+        { error: false, options: [3], value: 3 },
+        { error: false, options: [1], value: 1 },
+        { error: false, options: [4], value: 4 },
+        { error: false, options: [2], value: 2 },
+      ]]);
+    });
+  });
 });
