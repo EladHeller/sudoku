@@ -97,13 +97,297 @@ describe('SudokuLogic', () => {
 
       const changed = sudokuLogic.calcOptions(board);
       expect(changed).toBe(true);
-      expect(board[0][0].options).toEqual([4]);
-      expect(board[1][0].options).toEqual([4]);
-      expect(board[2][0].options).toEqual([1, 4]);
-      expect(board[2][0].options).toEqual([1, 4]);
-      expect(board[3][0].options).toEqual([2, 3, 4]);
-      expect(board[3][1].options).toEqual([2, 3, 4]);
-      expect(board[3][2].options).toEqual([2, 3, 4]);
+      expect(board).toEqual([
+        [
+          { error: false, options: [4] },
+          { error: false, options: [1, 2, 3] },
+          { error: false, options: [1, 2, 3] },
+          { error: false, options: [1, 2, 3] },
+        ],
+        [
+          { error: false, options: [4] },
+          { error: false, options: [1, 2] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [1, 3] },
+        ],
+        [
+          { error: false, options: [1, 4] },
+          { error: false, options: [1, 4] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [2, 3] },
+        ],
+        [
+          { error: false, options: [2, 3, 4] },
+          { error: false, options: [2, 3, 4] },
+          { error: false, options: [2, 3, 4] },
+          { error: false, options: [1] },
+        ],
+      ]);
+    });
+  });
+
+  describe('resetOptions', () => {
+    it('should reset options as well', () => {
+      const board: SudokuBoard = [
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3], value: 2 },
+          { error: false, options: [1, 2, 3] },
+          { error: false, options: [1, 2, 3] },
+        ],
+        [
+          { error: false, options: [4], value: 4 },
+          { error: false, options: [1, 2] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [1, 3] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 4] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [2, 3] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1], value: 1 },
+        ],
+      ];
+      sudokuLogic.resetOptions(board);
+
+      expect(board).toEqual([
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [2], value: 2 },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+        ],
+        [
+          { error: false, options: [4], value: 4 },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1], value: 1 },
+        ],
+      ]);
+    });
+  });
+
+  describe('resetErrors', () => {
+    it('should reset errors as well', () => {
+      const board: SudokuBoard = [
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: true, options: [1, 2, 3], value: 2 },
+          { error: false, options: [1, 2, 3] },
+          { error: false, options: [1, 2, 3] },
+        ],
+        [
+          { error: false, options: [4], value: 4 },
+          { error: true, options: [1, 2] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [1, 3] },
+        ],
+        [
+          { error: true, options: [1, 2, 3, 4] },
+          { error: true, options: [1, 2, 4] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [2, 3] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: true, options: [1], value: 1 },
+        ],
+      ];
+      sudokuLogic.resetErrors(board);
+
+      expect(board).toEqual([
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3], value: 2 },
+          { error: false, options: [1, 2, 3] },
+          { error: false, options: [1, 2, 3] },
+        ],
+        [
+          { error: false, options: [4], value: 4 },
+          { error: false, options: [1, 2] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [1, 3] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 4] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [2, 3] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1], value: 1 },
+        ],
+      ]);
+    });
+  });
+
+  describe('optionJustInArea', () => {
+    it('should remove option if it can be just in one block', () => {
+      const board: SudokuBoard = [
+        [
+          { error: false, options: [1, 3, 4] },
+          { error: false, options: [1, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [1, 2, 4] },
+          { error: false, options: [1, 2] },
+        ],
+      ];
+
+      const changed = sudokuLogic.optionJustInArea(board, 'column');
+      expect(changed).toBe(true);
+      expect(board).toEqual([
+        [
+          { error: false, options: [1, 3, 4] },
+          { error: false, options: [1, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 3, 4] },
+          { error: false, options: [1, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 4] },
+          { error: false, options: [1, 2, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [1, 2, 4] },
+          { error: false, options: [1, 2] },
+        ],
+      ]);
+    });
+
+    it('should remove option event with diiference value of rows and columns', () => {
+      sudokuLogic = SudokuLogic({
+        areasCount: 3,
+        squareColumns: 3,
+        squareRows: 2,
+      });
+      const board: SudokuBoard = [
+        [
+          { error: false, options: [1, 3, 4, 5, 6] },
+          { error: false, options: [1, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 4, 5, 6] },
+          { error: false, options: [2, 3, 5, 6] },
+          { error: false, options: [1, 2, 3, 4, 5, 6] },
+          { error: false, options: [1, 2, 5, 6] },
+        ],
+      ];
+
+      const changed = sudokuLogic.optionJustInArea(board, 'horizontalSquare');
+      expect(changed).toBe(true);
+      expect(board).toEqual([
+        [
+          { error: false, options: [1, 3, 4] },
+          { error: false, options: [1, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 3, 4] },
+          { error: false, options: [1, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 4] },
+          { error: false, options: [1, 2, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [1, 2, 3, 4] },
+        ],
+        [
+          { error: false, options: [1, 2, 3, 4] },
+          { error: false, options: [2, 3] },
+          { error: false, options: [1, 2, 4] },
+          { error: false, options: [1, 2] },
+        ],
+      ]);
     });
   });
 

@@ -1,7 +1,12 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable no-param-reassign */
 import {
-  SudokuBoard, SudokuValue, SudokuCell, SudokuConfig, ISudokuLogic, AllAreas,
+  SudokuBoard, SudokuValue, SudokuCell, SudokuConfig, ISudokuLogic, AreaType, AllAreas,
 } from './SudokuTypes';
+
+function createRange(range: number) {
+  return Array(range).fill(1).map((_, i) => i);
+}
 
 export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
   function markErrors(board: SudokuBoard): boolean {
@@ -143,8 +148,61 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
     };
   }
 
+  function getOptionIndexes(area: SudokuCell[], number: SudokuValue): number[] {
+    const indexes: number[] = [];
+    area.forEach((cell, index) => {
+      if (cell.options.includes(number)) {
+        indexes.push(index);
+      }
+    });
+    return indexes;
+  }
+
+  function optionJustInBlock(
+    number: SudokuValue,
+    area: SudokuCell[],
+    blockSize: number,
+  ): number | undefined {
+    const indexes = getOptionIndexes(area, number);
+    const indexesFromSameBlock = indexes.every(
+      (x, i) => i === 0 || (Math.floor(x / blockSize) === Math.floor(indexes[i - 1] / blockSize)),
+    );
+    if (indexes.length < 2 || !indexesFromSameBlock) {
+      return undefined;
+    }
+    return (indexes[0] - (indexes[0] % blockSize)) / blockSize;
+  }
+
+  function optionJustInArea(board: SudokuBoard, areaType: AreaType) {
+    let change = false;
+    for (let number: SudokuValue = 1; number <= config.areasCount; number++) {
+      const blockSize = areaType !== 'column' ? config.squareRows : config.squareColumns;
+      board.forEach((area, index) => {
+        const blockNumber = optionJustInBlock(
+          number,
+          area,
+          blockSize,
+        );
+        if (blockNumber != null) {
+          const baseAreaBaseNumber = Math.floor(index / blockSize) * blockSize;
+          const cellsForRemoveOption = createRange(blockSize)
+            .map((i) => baseAreaBaseNumber + i)
+            .filter((i) => i !== index)
+            .flatMap(
+              (y) => createRange(blockSize)
+                .map((b) => blockNumber * blockSize + b).map((x) => board[y][x]),
+            );
+          change = removeOptions(cellsForRemoveOption, [], [number]) || change;
+        }
+      });
+    }
+    return change;
+  }
+
   function solveSudoku(board: SudokuBoard): SudokuBoard {
-    const { columns, squares, rows } = getAllAreas(board);
+    const {
+      columns, squares, rows, horizontalSquares,
+    } = getAllAreas(board);
     resetOptions(rows);
 
     let isError = false;
@@ -159,6 +217,10 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
         isChanged = calcOptions(rows) || isChanged;
         isChanged = calcOptions(columns) || isChanged;
         isChanged = calcOptions(squares) || isChanged;
+        isChanged = optionJustInArea(rows, 'row') || isChanged;
+        isChanged = optionJustInArea(columns, 'column') || isChanged;
+        isChanged = optionJustInArea(squares, 'square') || isChanged;
+        isChanged = optionJustInArea(horizontalSquares, 'horizontalSquare') || isChanged;
       }
     } while (isChanged && !isError);
     setValues(rows);
@@ -167,7 +229,7 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
 
   function createDefaultBoard(): SudokuBoard {
     return Array(config.areasCount).fill(1).map(() => Array(config.areasCount).fill(1).map(() => ({
-      options: Array(config.areasCount).fill(1).map((_, index) => (index + 1) as SudokuValue),
+      options: createRange(config.areasCount).map((x) => (x + 1) as SudokuValue),
       error: false,
     })));
   }
@@ -180,5 +242,7 @@ export default function SudokuLogic(config: SudokuConfig): ISudokuLogic {
     getSameCells,
     getAllAreas,
     solveSudoku,
+    optionJustInArea,
+    resetOptions,
   };
 }

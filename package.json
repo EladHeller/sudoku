@@ -6,7 +6,7 @@
   "scripts": {
     "test": "export NODE_ENV=test && jest",
     "build": "rm -rf ./dist && webpack && cp src/index.html dist/index.html",
-    "start": "rm -rf ./dist && webpack --mode=development && cp src/index.html dist/index.html && webpack serve"
+    "start": "rm -rf ./dist && webpack --mode=development && cp src/index.html dist/index.html && webpack serve",
   },
   "keywords": [],
   "author": "",

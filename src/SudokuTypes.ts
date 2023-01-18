@@ -2,6 +2,8 @@ import { Observable } from 'rxjs';
 
 export type SudokuValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
+export type AreaType = 'column' | 'row' | 'square' | 'horizontalSquare';
+
 export interface SudokuCell {
   value?: SudokuValue;
   error: boolean;
@@ -37,6 +39,8 @@ export interface ISudokuLogic {
   solveSudoku: (board: SudokuBoard) => SudokuBoard;
   createDefaultBoard(): SudokuBoard;
   calcOptions(board: SudokuBoard): boolean;
+  optionJustInArea(board: SudokuBoard, areaType: AreaType): boolean;
+  resetOptions(board: SudokuBoard): void;
 }
 
 export interface ISudokuModel {
