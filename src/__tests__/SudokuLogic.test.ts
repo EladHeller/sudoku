@@ -1,5 +1,17 @@
+import { deepStrictEqual, notStrictEqual, strictEqual } from 'node:assert';
+import { beforeEach, describe, it } from 'node:test';
 import SudokuLogic from '../SudokuLogic';
 import { ISudokuLogic, SudokuBoard, SudokuCell } from '../SudokuTypes';
+
+function expect(actual: unknown) {
+  return {
+    toBe: (expected: unknown) => strictEqual(actual, expected),
+    toEqual: (expected: unknown) => deepStrictEqual(actual, expected),
+    not: {
+      toBe: (expected: unknown) => notStrictEqual(actual, expected),
+    },
+  };
+}
 
 describe('SudokuLogic', () => {
   let sudokuLogic: ISudokuLogic;

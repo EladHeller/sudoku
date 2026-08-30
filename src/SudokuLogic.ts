@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import {
   SudokuBoard, SudokuValue, SudokuCell, SudokuConfig, ISudokuLogic, AllAreas,
 } from './SudokuTypes';

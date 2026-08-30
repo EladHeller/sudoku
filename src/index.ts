@@ -59,7 +59,7 @@ sudokuModel.board$.subscribe((board) => {
       const cellElement = viewBoard[rIndex]?.[cIndex];
       if (cellElement != null) {
         cellElement.value = cell.value?.toString() ?? '';
-        cellElement.className = `cell ${cellElement.value ? classes[cellElement.value] : ''}`;
+        cellElement.className = `cell ${cell.value ? classes[cell.value] : ''}`;
         cellElement.parentElement?.classList.toggle('error', cell.error);
         cellElement.classList.toggle('error', cell.error);
       }
